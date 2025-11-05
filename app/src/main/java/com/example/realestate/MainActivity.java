@@ -24,28 +24,31 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // Handle window insets (status bar / nav bar)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Initialize views (use topTitle instead of appName)
         ImageView logo = findViewById(R.id.logoImage);
-        TextView appName = findViewById(R.id.appName);
+        TextView topTitle = findViewById(R.id.topTitle);
         TextView tagline = findViewById(R.id.tagline);
 
-        // Load animations
+        // Load animations (make sure you have the files in res/anim/)
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
         Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
         // Apply animations
         logo.startAnimation(zoomIn);
-        appName.startAnimation(fadeIn);
+        topTitle.startAnimation(fadeIn);
         tagline.startAnimation(slideUp);
 
-        // Move to next page after splash
+        // Delay for splash screen then move to next activity
         new Handler().postDelayed(() -> {
+            // Replace HomeActivity with your actual home page later
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
