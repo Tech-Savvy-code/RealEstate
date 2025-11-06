@@ -21,30 +21,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="100dp" />
 
+    <!-- App Name (Stylish Gradient + Shadow + Glow) -->
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HomeVista"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:letterSpacing="0.05"
         android:textColor="@android:color/white"
+        android:shadowColor="#4D90FE"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="10"
         app:layout_constraintTop_toBottomOf="@id/logoImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:padding="4dp"
+        android:background="@drawable/text_gradient_bg"
+        android:clipToOutline="true" />
 
+
+    <!-- Tagline (Elegant Accent Text) -->
     <TextView
         android:id="@+id/tagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Find • Buy • Rent — All in One Place"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="italic"
+        android:textColor="#E3F2FD"
+        android:shadowColor="#263238"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="5"
         app:layout_constraintTop_toBottomOf="@id/appName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="10dp"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="4dp" />
+
 
     <LinearLayout
         android:id="@+id/buttonContainer"
