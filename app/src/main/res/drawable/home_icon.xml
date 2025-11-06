@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Background Glow -->
+    <path
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2z"
+        android:fillColor="#3949AB"
+        android:fillAlpha="0.15" />
+
+    <!-- Soft Halo for Depth -->
+    <path
+        android:pathData="M12,1C5.93,1 1,5.93 1,12s4.93,11 11,11 11,-4.93 11,-11S18.07,1 12,1z"
+        android:fillColor="#1A237E"
+        android:fillAlpha="0.1" />
+
+    <!-- Roof with Gradient Feel -->
+    <path
+        android:pathData="M12,4L21,12h-3v1L12,7 6,13v-1H3z"
+        android:fillColor="#3D5AFE"
+        android:fillAlpha="0.9" />
+
+    <!-- Main House Body -->
+    <path
+        android:pathData="M10,20v-6h4v6h5v-8h3L12,4 2,12h3v8z"
+        android:fillColor="#283593" />
+
+    <!-- Door (Vibrant Accent) -->
+    <path
+        android:pathData="M10,14h4v6h-4z"
+        android:fillColor="#00E676" />
+
+    <!-- Windows -->
+    <path
+        android:pathData="M8,14h1.5v2H8zM14.5,14H16v2h-1.5z"
+        android:fillColor="#B3E5FC"
+        android:fillAlpha="0.9" />
+
+    <!-- Subtle Shine on Roof -->
+    <path
+        android:pathData="M6,12l6,-5 6,5"
+        android:strokeColor="#BBDEFB"
+        android:strokeWidth="0.8"
+        android:fillAlpha="0"
+        android:strokeAlpha="0.7" />
+
+    <!-- Soft Shadow under Roof -->
+    <path
+        android:pathData="M5,13h14v0.5H5z"
+        android:fillColor="#000000"
+        android:fillAlpha="0.1" />
+</vector>

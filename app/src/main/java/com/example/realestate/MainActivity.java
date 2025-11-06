@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // Move to next activity after delay
         new Handler().postDelayed(() -> {
             stopSplashSound();
-            Intent intent = new Intent(MainActivity.this, MainActivity.class); // Change this to your next screen
+            Intent intent = new Intent(MainActivity.this, WelcomeActivity.class); // Change this to your next screen
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
