@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 🎵 Play the splash sound with smooth fade-in
     private void playSplashSound() {
-        splashSound = MediaPlayer.create(this, R.raw.homevista);
+        splashSound = MediaPlayer.create(this, R.raw.homevistasound);
         if (splashSound != null) {
             splashSound.setVolume(0.5f, 0.5f); // Start at half volume
             splashSound.start();
