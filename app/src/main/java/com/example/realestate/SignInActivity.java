@@ -53,7 +53,7 @@ public class SignInActivity extends AppCompatActivity {
         // Sign In
         signInButton.setOnClickListener(v -> {
             signInButton.animate().scaleX(0.96f).scaleY(0.96f).setDuration(80).withEndAction(() ->
-                    signInButton.animate().scaleX(1f).scaleY(1f).setDuration(80)
+                    signInButton.animate().scaleX(1f).scaleY(  1f).setDuration(80)
             );
             validateAndSignIn();
         });
@@ -65,7 +65,7 @@ public class SignInActivity extends AppCompatActivity {
 
         // Sign Up Link
         signUpLink.setOnClickListener(v -> {
-            Intent intent = new Intent(SignInActivity.this, SignInActivity.class);
+            Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });

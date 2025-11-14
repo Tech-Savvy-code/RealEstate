@@ -60,7 +60,7 @@ public class WelcomeActivity extends AppCompatActivity {
         });
 
         registerBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(WelcomeActivity.this, WelcomeActivity.class);
+            Intent intent = new Intent(WelcomeActivity.this, SignUpActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         });
