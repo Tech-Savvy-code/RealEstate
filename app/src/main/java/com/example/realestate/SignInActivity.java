@@ -101,7 +101,7 @@ public class SignInActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Sign in successful!", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        Intent intent = new Intent(SignInActivity.this, HomePage.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
