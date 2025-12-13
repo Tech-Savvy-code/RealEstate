@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -165,14 +166,16 @@ public class HomePage extends AppCompatActivity {
             headerTitle.setTextColor(c);
         });
 
-        // --- WELCOME TEXT FLOAT + SCALE ---
-        // Prevent clipping (ensure parent layout has clipChildren="false")
+        // --- WELCOME TEXT FLOAT + SCALE + DYNAMIC BOLD ---
         welcomeText.setScaleX(1f);
         welcomeText.setScaleY(1f);
+        welcomeText.setTypeface(Typeface.DEFAULT);
+        welcomeText.setPivotX(0);
+        welcomeText.setPivotY(0);
 
         ObjectAnimator welcomeFloatY = ObjectAnimator.ofFloat(welcomeText, "translationY", 0f, -20f, 0f);
-        ObjectAnimator welcomeScaleX = ObjectAnimator.ofFloat(welcomeText, "scaleX", 1f, 1.25f, 1f);
-        ObjectAnimator welcomeScaleY = ObjectAnimator.ofFloat(welcomeText, "scaleY", 1f, 1.25f, 1f);
+        ObjectAnimator welcomeScaleX = ObjectAnimator.ofFloat(welcomeText, "scaleX", 1f, 1.35f, 1f);
+        ObjectAnimator welcomeScaleY = ObjectAnimator.ofFloat(welcomeText, "scaleY", 1f, 1.35f, 1f);
 
         welcomeFloatY.setDuration(4000);
         welcomeScaleX.setDuration(4000);
@@ -185,6 +188,16 @@ public class HomePage extends AppCompatActivity {
         welcomeFloatY.setRepeatMode(ValueAnimator.REVERSE);
         welcomeScaleX.setRepeatMode(ValueAnimator.REVERSE);
         welcomeScaleY.setRepeatMode(ValueAnimator.REVERSE);
+
+        // Dynamic bold when floating up
+        welcomeFloatY.addUpdateListener(animation -> {
+            float y = (float) animation.getAnimatedValue();
+            if (y < -5f) {
+                welcomeText.setTypeface(Typeface.DEFAULT_BOLD);
+            } else {
+                welcomeText.setTypeface(Typeface.DEFAULT);
+            }
+        });
 
         AnimatorSet welcomeSet = new AnimatorSet();
         welcomeSet.playTogether(welcomeFloatY, welcomeScaleX, welcomeScaleY);

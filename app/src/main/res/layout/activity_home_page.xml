@@ -476,6 +476,7 @@
                                 android:background="@drawable/property_gradient" />
 
                             <ImageView
+                                android:id="@+id/heart1"
                                 android:layout_width="42dp"
                                 android:layout_height="42dp"
                                 android:layout_alignParentEnd="true"
@@ -483,7 +484,8 @@
                                 android:background="@drawable/round_white_glass"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_heart_outline"
-                                app:tint="@android:color/white" />
+                                app:tint="@android:color/white"
+                                android:elevation="6dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -588,6 +590,7 @@
                                 android:background="@drawable/property_gradient" />
 
                             <ImageView
+                                android:id="@+id/heart2"
                                 android:layout_width="42dp"
                                 android:layout_height="42dp"
                                 android:layout_alignParentEnd="true"
@@ -595,7 +598,8 @@
                                 android:background="@drawable/round_white_glass"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_heart_outline"
-                                app:tint="@android:color/white" />
+                                app:tint="@android:color/white"
+                                android:elevation="6dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
