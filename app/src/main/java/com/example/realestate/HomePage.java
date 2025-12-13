@@ -1,6 +1,7 @@
 package com.example.realestate;
 
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -34,6 +35,11 @@ public class HomePage extends AppCompatActivity {
     private EditText searchHint;
     private ImageView profileIcon, micButton, iconBuy, iconRent, iconSell;
 
+    // Hearts
+    private ImageView heart1, heart2;
+    private boolean heart1Liked = false;
+    private boolean heart2Liked = false;
+
     private boolean isExpanded = false;
     private ValueAnimator glowAnimator;
     private GradientDrawable glowDrawable;
@@ -61,6 +67,7 @@ public class HomePage extends AppCompatActivity {
         animatePropertyCards();
         setupTypingGlow();
         setupGlassEffect();
+        setupHeartInteractivity(); // <-- New heart logic
     }
 
     private void initializeViews() {
@@ -83,6 +90,10 @@ public class HomePage extends AppCompatActivity {
         iconSell = findViewById(R.id.iconSell);
 
         micButton = findViewById(R.id.micButton);
+
+        // Hearts
+        heart1 = findViewById(R.id.heart1);
+        heart2 = findViewById(R.id.heart2);
 
         // Search bar glow background
         glowDrawable = new GradientDrawable();
@@ -118,7 +129,46 @@ public class HomePage extends AppCompatActivity {
         searchHint.setHint("Search properties, locations...");
     }
 
-    // SEARCH EXPAND ANIMATION
+    private void setupHeartInteractivity() {
+        heart1.setOnClickListener(v -> toggleHeart(heart1, 1));
+        heart2.setOnClickListener(v -> toggleHeart(heart2, 2));
+    }
+
+    private void toggleHeart(ImageView heart, int heartNumber) {
+        boolean liked = (heartNumber == 1) ? heart1Liked : heart2Liked;
+
+        if (!liked) {
+            heart.setColorFilter(Color.parseColor("#FF4081")); // Pink/shine
+            playHeartAnimation(heart);
+        } else {
+            heart.setColorFilter(Color.parseColor("#B0B0B0")); // Default gray
+        }
+
+        if (heartNumber == 1) heart1Liked = !heart1Liked;
+        else heart2Liked = !heart2Liked;
+    }
+
+    private void playHeartAnimation(ImageView heart) {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(heart, "scaleX", 1f, 1.4f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(heart, "scaleY", 1f, 1.4f, 1f);
+        scaleX.setDuration(400);
+        scaleY.setDuration(400);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(scaleX, scaleY);
+        set.start();
+
+        // Optional: shimmer/glow color animation
+        ValueAnimator colorAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                Color.parseColor("#FF4081"),
+                Color.parseColor("#FF80AB"),
+                Color.parseColor("#FF4081"));
+        colorAnim.setDuration(700);
+        colorAnim.setRepeatCount(1);
+        colorAnim.addUpdateListener(animation -> heart.setColorFilter((int) animation.getAnimatedValue()));
+        colorAnim.start();
+    }
+
+    // --- Existing code below unchanged ---
     private void toggleSearchExpand() {
         int startWidth = searchCardView.getWidth();
         int targetWidth = isExpanded ?
@@ -136,7 +186,6 @@ public class HomePage extends AppCompatActivity {
         isExpanded = !isExpanded;
     }
 
-    // SEARCH BAR SLIDE IN ANIMATION
     private void animateSearchBarSlideIn() {
         searchCardView.setTranslationY(-120f);
         searchCardView.setAlpha(0f);
@@ -150,23 +199,20 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void applyHeaderAnimations() {
-        // --- HEADER TITLE FLOAT & COLOR ---
         ObjectAnimator headerFloatY = ObjectAnimator.ofFloat(headerTitle, "translationY", 0f, -15f, 0f);
         headerFloatY.setDuration(4000);
         headerFloatY.setRepeatCount(ValueAnimator.INFINITE);
         headerFloatY.setRepeatMode(ValueAnimator.REVERSE);
 
-        // Header color cycle
         ValueAnimator headerColor = ValueAnimator.ofFloat(0f, 1f);
         headerColor.setDuration(7000);
         headerColor.setRepeatCount(ValueAnimator.INFINITE);
         headerColor.addUpdateListener(a -> {
             float f = (float) a.getAnimatedValue();
-            int c = Color.HSVToColor(new float[]{f * 360f, 0.45f, 1f});
+            int c = android.graphics.Color.HSVToColor(new float[]{f * 360f, 0.45f, 1f});
             headerTitle.setTextColor(c);
         });
 
-        // --- WELCOME TEXT FLOAT + SCALE + DYNAMIC BOLD ---
         welcomeText.setScaleX(1f);
         welcomeText.setScaleY(1f);
         welcomeText.setTypeface(Typeface.DEFAULT);
@@ -189,25 +235,19 @@ public class HomePage extends AppCompatActivity {
         welcomeScaleX.setRepeatMode(ValueAnimator.REVERSE);
         welcomeScaleY.setRepeatMode(ValueAnimator.REVERSE);
 
-        // Dynamic bold when floating up
         welcomeFloatY.addUpdateListener(animation -> {
             float y = (float) animation.getAnimatedValue();
-            if (y < -5f) {
-                welcomeText.setTypeface(Typeface.DEFAULT_BOLD);
-            } else {
-                welcomeText.setTypeface(Typeface.DEFAULT);
-            }
+            if (y < -5f) welcomeText.setTypeface(Typeface.DEFAULT_BOLD);
+            else welcomeText.setTypeface(Typeface.DEFAULT);
         });
 
         AnimatorSet welcomeSet = new AnimatorSet();
         welcomeSet.playTogether(welcomeFloatY, welcomeScaleX, welcomeScaleY);
 
-        // --- PLAY ANIMATIONS TOGETHER ---
         AnimatorSet allSet = new AnimatorSet();
         allSet.playTogether(headerFloatY, welcomeSet);
         allSet.start();
 
-        // Start header color animation
         headerColor.start();
     }
 
