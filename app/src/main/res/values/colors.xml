@@ -14,5 +14,9 @@
     <color name="purple_900">#4A148C</color>
 
     <color name="purpleAccent">#E040FB</color>
+    <color name="gray">#6E6E6E</color>      <!-- medium modern gray -->
+    <color name="gray_light">#AFAFAF</color>
+    <color name="gray_dark">#4A4A4A</color>
+
 
 </resources>

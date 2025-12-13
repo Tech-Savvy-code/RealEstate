@@ -26,11 +26,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class HomePage extends AppCompatActivity {
 
+    // UI Components
     private CardView searchCardView, propertyCard1, propertyCard2;
     private LinearLayout buyLayout, rentLayout, sellLayout;
     private TextView headerTitle, servicesTitle, featuredPropertiesTitle, welcomeText;
     private EditText searchHint;
-    private ImageView profileIcon, micButton;
+    private ImageView profileIcon, micButton, iconBuy, iconRent, iconSell;
 
     private boolean isExpanded = false;
     private ValueAnimator glowAnimator;
@@ -55,8 +56,10 @@ public class HomePage extends AppCompatActivity {
         applyHeaderAnimations();
         animateProfileIcon();
         animateSearchBarSlideIn();
-        setupGlassEffect();
+        animateQuickActionIcons();
+        animatePropertyCards();
         setupTypingGlow();
+        setupGlassEffect();
     }
 
     private void initializeViews() {
@@ -67,19 +70,24 @@ public class HomePage extends AppCompatActivity {
         propertyCard1 = findViewById(R.id.propertyCard1);
         propertyCard2 = findViewById(R.id.propertyCard2);
 
-        headerTitle = findViewById(R.id.headerTitle); // "Find Your Dream Home"
+        headerTitle = findViewById(R.id.headerTitle);
         searchHint = findViewById(R.id.searchInput);
         servicesTitle = findViewById(R.id.servicesTitle);
         featuredPropertiesTitle = findViewById(R.id.featuredPropertiesTitle);
-        welcomeText = findViewById(R.id.welcomeText); // "Welcome Back"
+        welcomeText = findViewById(R.id.welcomeText);
         profileIcon = findViewById(R.id.profileIcon);
+
+        iconBuy = findViewById(R.id.iconBuy);
+        iconRent = findViewById(R.id.iconRent);
+        iconSell = findViewById(R.id.iconSell);
+
         micButton = findViewById(R.id.micButton);
 
-        // Set search bar background to white with thin border
+        // Search bar glow background
         glowDrawable = new GradientDrawable();
         glowDrawable.setColor(Color.WHITE);
         glowDrawable.setCornerRadius(35f);
-        glowDrawable.setStroke(3, Color.parseColor("#B0B0B0")); // thin gray border
+        glowDrawable.setStroke(3, Color.parseColor("#B0B0B0"));
         searchCardView.setBackground(glowDrawable);
     }
 
@@ -87,7 +95,6 @@ public class HomePage extends AppCompatActivity {
         searchCardView.setOnClickListener(v -> {
             pressBounce(searchCardView);
             toggleSearchExpand();
-            Toast.makeText(this, "Opening search...", Toast.LENGTH_SHORT).show();
         });
 
         if (micButton != null) {
@@ -99,8 +106,8 @@ public class HomePage extends AppCompatActivity {
         buyLayout.setOnClickListener(v -> Toast.makeText(this, "Browse properties for sale", Toast.LENGTH_SHORT).show());
         rentLayout.setOnClickListener(v -> Toast.makeText(this, "Browse rental properties", Toast.LENGTH_SHORT).show());
         sellLayout.setOnClickListener(v -> Toast.makeText(this, "List your property for sale", Toast.LENGTH_SHORT).show());
-        propertyCard1.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 1 details", Toast.LENGTH_SHORT).show());
-        propertyCard2.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 2 details", Toast.LENGTH_SHORT).show());
+        propertyCard1.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 1", Toast.LENGTH_SHORT).show());
+        propertyCard2.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 2", Toast.LENGTH_SHORT).show());
         profileIcon.setOnClickListener(v -> Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show());
     }
 
@@ -110,6 +117,7 @@ public class HomePage extends AppCompatActivity {
         searchHint.setHint("Search properties, locations...");
     }
 
+    // SEARCH EXPAND ANIMATION
     private void toggleSearchExpand() {
         int startWidth = searchCardView.getWidth();
         int targetWidth = isExpanded ?
@@ -124,10 +132,10 @@ public class HomePage extends AppCompatActivity {
             searchCardView.requestLayout();
         });
         anim.start();
-
         isExpanded = !isExpanded;
     }
 
+    // SEARCH BAR SLIDE IN ANIMATION
     private void animateSearchBarSlideIn() {
         searchCardView.setTranslationY(-120f);
         searchCardView.setAlpha(0f);
@@ -140,82 +148,118 @@ public class HomePage extends AppCompatActivity {
                 .start();
     }
 
-    private void setupGlassEffect() {
-        searchCardView.getViewTreeObserver().addOnScrollChangedListener(() -> {
-            searchCardView.setCardElevation(18f);
-            searchCardView.setAlpha(0.92f);
-        });
-    }
-
     private void applyHeaderAnimations() {
-        // Float animations for header and welcome text
-        ObjectAnimator headerFloat = ObjectAnimator.ofFloat(headerTitle, "translationY", 0f, -15f, 0f);
-        ObjectAnimator welcomeFloat = ObjectAnimator.ofFloat(welcomeText, "translationY", 0f, -10f, 0f);
+        // --- HEADER TITLE FLOAT & COLOR ---
+        ObjectAnimator headerFloatY = ObjectAnimator.ofFloat(headerTitle, "translationY", 0f, -15f, 0f);
+        headerFloatY.setDuration(4000);
+        headerFloatY.setRepeatCount(ValueAnimator.INFINITE);
+        headerFloatY.setRepeatMode(ValueAnimator.REVERSE);
 
-        headerFloat.setDuration(4000);
-        welcomeFloat.setDuration(3000);
-
-        headerFloat.setRepeatCount(ValueAnimator.INFINITE);
-        welcomeFloat.setRepeatCount(ValueAnimator.INFINITE);
-
-        headerFloat.setRepeatMode(ValueAnimator.REVERSE);
-        welcomeFloat.setRepeatMode(ValueAnimator.REVERSE);
-
-        headerFloat.setInterpolator(new AccelerateDecelerateInterpolator());
-        welcomeFloat.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        AnimatorSet floatSet = new AnimatorSet();
-        floatSet.playTogether(headerFloat, welcomeFloat);
-        floatSet.start();
-
-        // Optional: subtle color cycling for header text
-        ValueAnimator headerColorAnim = ValueAnimator.ofFloat(0, 1);
-        headerColorAnim.setDuration(7000);
-        headerColorAnim.setRepeatCount(ValueAnimator.INFINITE);
-        headerColorAnim.addUpdateListener(animator -> {
-            float fraction = (float) animator.getAnimatedValue();
-            int color = Color.HSVToColor(new float[]{fraction * 360f, 0.5f, 1f});
-            headerTitle.setTextColor(color);
+        // Header color cycle
+        ValueAnimator headerColor = ValueAnimator.ofFloat(0f, 1f);
+        headerColor.setDuration(7000);
+        headerColor.setRepeatCount(ValueAnimator.INFINITE);
+        headerColor.addUpdateListener(a -> {
+            float f = (float) a.getAnimatedValue();
+            int c = Color.HSVToColor(new float[]{f * 360f, 0.45f, 1f});
+            headerTitle.setTextColor(c);
         });
-        headerColorAnim.start();
 
-        ValueAnimator welcomeColorAnim = ValueAnimator.ofFloat(0, 1);
-        welcomeColorAnim.setDuration(5000);
-        welcomeColorAnim.setRepeatCount(ValueAnimator.INFINITE);
-        welcomeColorAnim.addUpdateListener(animator -> {
-            float fraction = (float) animator.getAnimatedValue();
-            int color = Color.HSVToColor(new float[]{fraction * 360f, 0.5f, 1f});
-            welcomeText.setTextColor(color);
-        });
-        welcomeColorAnim.start();
+        // --- WELCOME TEXT FLOAT + SCALE ---
+        // Prevent clipping (ensure parent layout has clipChildren="false")
+        welcomeText.setScaleX(1f);
+        welcomeText.setScaleY(1f);
+
+        ObjectAnimator welcomeFloatY = ObjectAnimator.ofFloat(welcomeText, "translationY", 0f, -20f, 0f);
+        ObjectAnimator welcomeScaleX = ObjectAnimator.ofFloat(welcomeText, "scaleX", 1f, 1.25f, 1f);
+        ObjectAnimator welcomeScaleY = ObjectAnimator.ofFloat(welcomeText, "scaleY", 1f, 1.25f, 1f);
+
+        welcomeFloatY.setDuration(4000);
+        welcomeScaleX.setDuration(4000);
+        welcomeScaleY.setDuration(4000);
+
+        welcomeFloatY.setRepeatCount(ValueAnimator.INFINITE);
+        welcomeScaleX.setRepeatCount(ValueAnimator.INFINITE);
+        welcomeScaleY.setRepeatCount(ValueAnimator.INFINITE);
+
+        welcomeFloatY.setRepeatMode(ValueAnimator.REVERSE);
+        welcomeScaleX.setRepeatMode(ValueAnimator.REVERSE);
+        welcomeScaleY.setRepeatMode(ValueAnimator.REVERSE);
+
+        AnimatorSet welcomeSet = new AnimatorSet();
+        welcomeSet.playTogether(welcomeFloatY, welcomeScaleX, welcomeScaleY);
+
+        // --- PLAY ANIMATIONS TOGETHER ---
+        AnimatorSet allSet = new AnimatorSet();
+        allSet.playTogether(headerFloatY, welcomeSet);
+        allSet.start();
+
+        // Start header color animation
+        headerColor.start();
     }
 
     private void animateProfileIcon() {
-        ObjectAnimator translateY = ObjectAnimator.ofFloat(profileIcon, "translationY", 0f, -12f, 0f);
-        translateY.setDuration(2000);
-        translateY.setRepeatCount(ValueAnimator.INFINITE);
-        translateY.setRepeatMode(ValueAnimator.REVERSE);
+        ObjectAnimator floatY = ObjectAnimator.ofFloat(profileIcon, "translationY", 0f, -12f, 0f);
+        floatY.setDuration(2500);
+        floatY.setRepeatCount(ValueAnimator.INFINITE);
+        floatY.setRepeatMode(ValueAnimator.REVERSE);
 
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(profileIcon, "scaleX", 1f, 1.08f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(profileIcon, "scaleY", 1f, 1.08f, 1f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(profileIcon, "scaleX", 1f, 1.07f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(profileIcon, "scaleY", 1f, 1.07f, 1f);
 
-        scaleX.setDuration(2000);
-        scaleY.setDuration(2000);
-
+        scaleX.setDuration(2500);
+        scaleY.setDuration(2500);
         scaleX.setRepeatCount(ValueAnimator.INFINITE);
         scaleY.setRepeatCount(ValueAnimator.INFINITE);
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(translateY, scaleX, scaleY);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.start();
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(floatY, scaleX, scaleY);
+        set.start();
+    }
+
+    private void animateQuickActionIcons() {
+        animateIcon(iconBuy, 3000);
+        animateIcon(iconRent, 3300);
+        animateIcon(iconSell, 3100);
+    }
+
+    private void animateIcon(ImageView icon, int duration) {
+        ObjectAnimator floatY = ObjectAnimator.ofFloat(icon, "translationY", 0f, -12f, 0f);
+        floatY.setDuration(duration);
+        floatY.setRepeatCount(ValueAnimator.INFINITE);
+        floatY.setRepeatMode(ValueAnimator.REVERSE);
+
+        ObjectAnimator scale = ObjectAnimator.ofFloat(icon, "scaleX", 1f, 1.06f, 1f);
+        ObjectAnimator scale2 = ObjectAnimator.ofFloat(icon, "scaleY", 1f, 1.06f, 1f);
+        scale.setDuration(duration);
+        scale2.setDuration(duration);
+        scale.setRepeatCount(ValueAnimator.INFINITE);
+        scale2.setRepeatCount(ValueAnimator.INFINITE);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(floatY, scale, scale2);
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.start();
+    }
+
+    private void animatePropertyCards() {
+        animateCard(propertyCard1);
+        animateCard(propertyCard2);
+    }
+
+    private void animateCard(CardView card) {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(card, "translationY", 0f, -8f, 0f);
+        anim.setDuration(4500);
+        anim.setRepeatMode(ValueAnimator.REVERSE);
+        anim.setRepeatCount(ValueAnimator.INFINITE);
+        anim.start();
     }
 
     private void pressBounce(CardView view) {
         AnimatorSet set = new AnimatorSet();
 
-        ObjectAnimator sx = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.95f, 1f);
-        ObjectAnimator sy = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.95f, 1f);
+        ObjectAnimator sx = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.94f, 1f);
+        ObjectAnimator sy = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.94f, 1f);
 
         set.setDuration(150);
         set.playTogether(sx, sy);
@@ -224,17 +268,12 @@ public class HomePage extends AppCompatActivity {
 
     private void setupTypingGlow() {
         searchHint.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) startGlowAnimation();
                 else stopGlowAnimation();
             }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
+            @Override public void afterTextChanged(Editable s) { }
         });
     }
 
@@ -246,22 +285,22 @@ public class HomePage extends AppCompatActivity {
         glowAnimator.setRepeatMode(ValueAnimator.REVERSE);
         glowAnimator.setRepeatCount(ValueAnimator.INFINITE);
 
-        glowAnimator.addUpdateListener(animation -> {
-            int strokeWidth = (int) animation.getAnimatedValue();
-            glowDrawable.setStroke(strokeWidth, Color.parseColor("#3F51B5"));
-            searchCardView.setBackground(glowDrawable);
+        glowAnimator.addUpdateListener(a -> {
+            int stroke = (int) a.getAnimatedValue();
+            glowDrawable.setStroke(stroke, Color.parseColor("#3F51B5"));
         });
 
         glowAnimator.start();
     }
 
     private void stopGlowAnimation() {
-        if (glowAnimator != null) {
-            glowAnimator.cancel();
-            glowAnimator = null;
-        }
+        if (glowAnimator != null) glowAnimator.cancel();
         glowDrawable.setStroke(3, Color.parseColor("#B0B0B0"));
-        searchCardView.setBackground(glowDrawable);
+    }
+
+    private void setupGlassEffect() {
+        searchCardView.setAlpha(0.95f);
+        searchCardView.setElevation(18f);
     }
 
     @SuppressLint("GestureBackNavigation")
