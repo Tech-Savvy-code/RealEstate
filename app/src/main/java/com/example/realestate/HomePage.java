@@ -5,6 +5,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -31,7 +32,7 @@ public class HomePage extends AppCompatActivity {
     // UI Components
     private CardView searchCardView, propertyCard1, propertyCard2;
     private LinearLayout buyLayout, rentLayout, sellLayout;
-    private TextView headerTitle, servicesTitle, featuredPropertiesTitle, welcomeText;
+    private TextView headerTitle, servicesTitle, featuredPropertiesTitle, welcomeText, seeAllText;
     private EditText searchHint;
     private ImageView profileIcon, micButton, iconBuy, iconRent, iconSell;
 
@@ -67,7 +68,7 @@ public class HomePage extends AppCompatActivity {
         animatePropertyCards();
         setupTypingGlow();
         setupGlassEffect();
-        setupHeartInteractivity(); // <-- New heart logic
+        setupHeartInteractivity();
     }
 
     private void initializeViews() {
@@ -95,6 +96,9 @@ public class HomePage extends AppCompatActivity {
         heart1 = findViewById(R.id.heart1);
         heart2 = findViewById(R.id.heart2);
 
+        // See All Text
+        seeAllText = findViewById(R.id.seeAllText);
+
         // Search bar glow background
         glowDrawable = new GradientDrawable();
         glowDrawable.setColor(Color.WHITE);
@@ -121,6 +125,12 @@ public class HomePage extends AppCompatActivity {
         propertyCard1.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 1", Toast.LENGTH_SHORT).show());
         propertyCard2.setOnClickListener(v -> Toast.makeText(this, "Viewing Property 2", Toast.LENGTH_SHORT).show());
         profileIcon.setOnClickListener(v -> Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show());
+
+        // --- NEW: See All click opens FeaturedGalleryActivity ---
+        seeAllText.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePage.this, FeaturedGalleryActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupUI() {
@@ -138,10 +148,10 @@ public class HomePage extends AppCompatActivity {
         boolean liked = (heartNumber == 1) ? heart1Liked : heart2Liked;
 
         if (!liked) {
-            heart.setColorFilter(Color.parseColor("#FF4081")); // Pink/shine
+            heart.setColorFilter(Color.parseColor("#FF4081"));
             playHeartAnimation(heart);
         } else {
-            heart.setColorFilter(Color.parseColor("#B0B0B0")); // Default gray
+            heart.setColorFilter(Color.parseColor("#B0B0B0"));
         }
 
         if (heartNumber == 1) heart1Liked = !heart1Liked;
@@ -157,7 +167,6 @@ public class HomePage extends AppCompatActivity {
         set.playTogether(scaleX, scaleY);
         set.start();
 
-        // Optional: shimmer/glow color animation
         ValueAnimator colorAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
                 Color.parseColor("#FF4081"),
                 Color.parseColor("#FF80AB"),
@@ -168,7 +177,7 @@ public class HomePage extends AppCompatActivity {
         colorAnim.start();
     }
 
-    // --- Existing code below unchanged ---
+    // --- Existing animation and utility methods below ---
     private void toggleSearchExpand() {
         int startWidth = searchCardView.getWidth();
         int targetWidth = isExpanded ?
@@ -310,10 +319,8 @@ public class HomePage extends AppCompatActivity {
 
     private void pressBounce(CardView view) {
         AnimatorSet set = new AnimatorSet();
-
         ObjectAnimator sx = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.94f, 1f);
         ObjectAnimator sy = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.94f, 1f);
-
         set.setDuration(150);
         set.playTogether(sx, sy);
         set.start();
@@ -332,17 +339,14 @@ public class HomePage extends AppCompatActivity {
 
     private void startGlowAnimation() {
         if (glowAnimator != null && glowAnimator.isRunning()) return;
-
         glowAnimator = ValueAnimator.ofInt(3, 12);
         glowAnimator.setDuration(800);
         glowAnimator.setRepeatMode(ValueAnimator.REVERSE);
         glowAnimator.setRepeatCount(ValueAnimator.INFINITE);
-
         glowAnimator.addUpdateListener(a -> {
             int stroke = (int) a.getAnimatedValue();
             glowDrawable.setStroke(stroke, Color.parseColor("#3F51B5"));
         });
-
         glowAnimator.start();
     }
 
