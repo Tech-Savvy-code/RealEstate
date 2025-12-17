@@ -44,7 +44,6 @@
         android:background="@drawable/text_gradient_bg"
         android:clipToOutline="true" />
 
-
     <!-- Tagline (Elegant Accent Text) -->
     <TextView
         android:id="@+id/tagline"
@@ -65,7 +64,6 @@
         android:layout_marginTop="10dp"
         android:letterSpacing="0.02"
         android:lineSpacingExtra="4dp" />
-
 
     <LinearLayout
         android:id="@+id/buttonContainer"
@@ -99,16 +97,6 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="12dp"
             android:drawableLeft="@drawable/ic_register" />
-
-        <Button
-            android:id="@+id/guestBtn"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:text="Continue as Guest"
-            android:textStyle="bold"
-            android:backgroundTint="#757575"
-            android:textColor="@android:color/white"
-            android:drawableLeft="@drawable/ic_guest" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

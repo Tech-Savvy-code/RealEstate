@@ -35,7 +35,6 @@ public class WelcomeActivity extends AppCompatActivity {
         TextView tagline = findViewById(R.id.tagline);
         Button loginBtn = findViewById(R.id.loginBtn);
         Button registerBtn = findViewById(R.id.registerBtn);
-        Button guestBtn = findViewById(R.id.guestBtn);
 
         // Load animations
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -47,10 +46,9 @@ public class WelcomeActivity extends AppCompatActivity {
         appName.startAnimation(fadeIn);
         tagline.startAnimation(slideUp);
 
-        // Button animations (delayed for effect)
+        // Button animations
         loginBtn.startAnimation(slideUp);
         registerBtn.startAnimation(slideUp);
-        guestBtn.startAnimation(slideUp);
 
         // Button listeners
         loginBtn.setOnClickListener(v -> {
@@ -63,12 +61,6 @@ public class WelcomeActivity extends AppCompatActivity {
             Intent intent = new Intent(WelcomeActivity.this, SignUpActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        });
-
-        guestBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(WelcomeActivity.this, WelcomeActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
     }
 }
